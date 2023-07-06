@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/rcs_test.dir/main_test.cpp.o  -o rcs_test  ../lib/libgtestd.a -lpthread 
