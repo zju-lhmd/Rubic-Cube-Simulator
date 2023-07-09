@@ -14,7 +14,7 @@ typedef unsigned int cube_t;
  *     |
  *     |
  *     |
- *     |-------------X
+ *     |________X
  *    /
  *   /
  *  /

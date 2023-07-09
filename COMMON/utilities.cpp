@@ -32,24 +32,6 @@ std::string stepsToString(CubeSteps steps, char delim)
 	return r;
 }
 
-void printError(CubeError err)
-{
-	if (err.what == "") {
-		fprintf(stderr, "CubeError\n");
-	}else {
-		fprintf(stderr, "CubeError: %s\n", err.what.c_str());
-	}
-}
-
-void printError(SolverError err)
-{
-	if (err.what == "") {
-		fprintf(stderr, "SolverError\n");
-	}else {
-		fprintf(stderr, "SolverError: %s\n", err.what.c_str());
-	}
-}
-
 CubeRotateMethod inverse(CubeRotateMethod m)
 {
 	if (m < ROTATE_NONEi) {
