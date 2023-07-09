@@ -1,5 +1,4 @@
 #include "APP/App.h"
-#define GLFW_INCLUDE_GLU
 
 int main()
 {
