@@ -10,8 +10,6 @@
 // view perspective
 #define DEFAULT_VIEW_ANGLE_X (45.0)
 #define DEFAULT_VIEW_ANGLE_Y (-45.0)
-// rank of rubic cube (Only 3)
-#define RANK (3)
 // rotate animation speed
 #define ROTATE_SPEED (1.5)
 // rubic cube file length (3*3*3 sub cubes, each sub cube has 6 faces)
