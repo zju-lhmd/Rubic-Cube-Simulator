@@ -52,7 +52,9 @@ bool MainWindow::init()
     // Initialize OPENGL
     initGL();
     // Set swap interval
-    glfwSwapInterval(1);
+    // glfwSwapInterval(1);
+    glfwSwapInterval(0);
+
     m_eventhandler.SetWindow(m_window);
     m_eventhandler.SetRenderer(&m_renderer);
     is_init = true;
@@ -66,7 +68,10 @@ void MainWindow::show()
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(m_window)) {
         m_renderer.GetRotateController()->nextFrame();
-        m_renderer.render();
+        std::string title = "Rubic Cube Simulator << " + m_eventhandler.getCommand(); 
+
+        glfwSetWindowTitle(m_window, title.c_str());
+        m_renderer.render(m_eventhandler.getCommand());
 
         // Swap front and back buffers
         glfwSwapBuffers(m_window);

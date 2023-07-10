@@ -11,6 +11,7 @@
 #include "../VIEWMODEL/CommandHandlers.h" // viewmodel
 
 // Main window of app using OPENGL
+
 class MainWindow {
 public:
     MainWindow(CommandHandler* cmdhdl);
@@ -30,7 +31,6 @@ private:
                      float upX, float upY, float upZ,
                      float* viewMatrix);// Create a view matrix
 
-private:
     bool is_init;// Flag to indicate if the window is initialized
     GLFWwindow* m_window;// Pointer to the GLFW window
     Renderer m_renderer;
