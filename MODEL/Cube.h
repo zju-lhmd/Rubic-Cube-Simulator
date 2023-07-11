@@ -1,41 +1,52 @@
-#ifndef CUBEMODEL_H
-#define CUBEMODEL_H
+#ifndef CUBE_H
+#define CUBE_H
 
 #include <map>
 #include <string>
+#include <memory>
 
-#include "../COMMON/Config.h" // common
+#include "../COMMON/config.h" // common
 #include "../COMMON/types.h" // common
-#include "../COMMON/Macro.h" // common
+#include "../COMMON/macro.h" // common
 #include "../COMMON/CubeError.h" // common
 
-class CubeModel {
+class Cube {
 public:
-    CubeModel();
+    Cube();
 
     // copy constructor
-    CubeModel(const Cube&);
+    Cube(const Cube&);
 
-    ~CubeModel();
+    ~Cube();
 
     void init();
 
-    cubes_t getCubes();
+    std::shared_ptr<cubes_t> getCubeData();
 
-    // TODO: Not Implement Yet
     void randomCube();
 
-    // used for Save or Load file
-    // TODO: Not Implement Yet
+    // used for save or load file
     std::string serialize();
     void deserialize(std::string);
 
     // perform cube rotation based on the given method
     void doMethod(CubeRotateMethod);
+    // check cube status
+    bool check();
 
+    bool checkL();
+    bool checkR();
+    bool checkU();
+    bool checkD();
+    bool checkF();
+    bool checkB();
+
+    static const std::map<char, CubeColor> s_charColorMap;
+    static const std::map<CubeColor, char> s_colorCharMap;
+    
 private:
-    // single rotate operation
-    // rotate single layer
+    // single rotation
+    // rotate one layer
     void R();
     void Ri();
     void L();
@@ -48,7 +59,7 @@ private:
     void Fi();
     void U();
     void Ui();
-    // rotate all layers
+    // rotate whole cube
     void rotateLeft();
     void rotateRight();
     void rotateUp();
@@ -57,8 +68,8 @@ private:
     void rotateCounterClockwise();
 
 private:
-    // cube state
-    cubes_t m_subCubes;
+    // current cube state
+    std::shared_ptr<cubes_t> m_pSubCubes;
 };
 
 
