@@ -1,9 +1,11 @@
 #include "MainWindow.h"
 
-MainWindow::MainWindow(CommandHandler* cmdhdl)
-    : is_init(false), m_window(nullptr),
-      m_renderer(cmdhdl->GetRotateController()), 
-      m_eventhandler(cmdhdl)
+MainWindow::MainWindow()
+: m_pWindow(nullptr),
+  m_pRenderer(std::make_shared<Renderer>(this)),
+  m_pEventCallback(std::make_shared<EventCallback>(this)),
+  m_pRotAni(std::make_shared<RotAni>(this)),
+  m_pVS(std::make_shared<MainWindowSink>(this))
 {
 }
 
@@ -11,74 +13,120 @@ MainWindow::~MainWindow()
 {
 }
 
-bool MainWindow::init()
+std::shared_ptr<INotification> MainWindow::getSink()
 {
-    // Initialize library
-    if(!glfwInit()) return false;
-    // Enable multi-sampling
-    glfwWindowHint(GLFW_SAMPLES, 9);
-    // Create a windowed mode window and its OpenGL context
-    m_window = glfwCreateWindow(WIDTH, HEIGHT, "Rubic Cube Simulator", NULL, NULL);
-    if (!m_window) {
-        glfwTerminate();
-        return false;
-    }
-    // Make the window's context current
-    glfwMakeContextCurrent(m_window);
-    // Set window user pointer to the event handler
-    glfwSetWindowUserPointer(m_window, &m_eventhandler);
-    // Initialize event handlers
-    // Bind mouse button callback
-    auto MouseCallBack =
-            [](GLFWwindow *window, int button, int action, int mods) {
-                EventHandler* pEventHandler = reinterpret_cast<EventHandler*>(glfwGetWindowUserPointer(window));
-                pEventHandler->mouseButtonCallback(window, button, action, mods);
-            };
-    glfwSetMouseButtonCallback(m_window, MouseCallBack);
-    // Bind keyboard callback
-    auto KeyBoardCallBack =
-            [](GLFWwindow *window, int key, int scancode, int action, int mods) {
-                EventHandler* pEventHandler = reinterpret_cast<EventHandler*>(glfwGetWindowUserPointer(window));
-                pEventHandler->keyboardCallback(window, key, scancode, action, mods);
-            };
-    glfwSetKeyCallback(m_window, KeyBoardCallBack);
-    // Bind character callback
-    auto CharCallBack =
-            [](GLFWwindow *window, unsigned int codepoint) {
-                EventHandler* pEventHandler = reinterpret_cast<EventHandler*>(glfwGetWindowUserPointer(window));
-                pEventHandler->characterCallback(window, codepoint);
-            };
-    glfwSetCharCallback(m_window, CharCallBack);
-    // Initialize OPENGL
-    initGL();
-    // Set swap interval
-    glfwSwapInterval(1);
-    m_eventhandler.SetWindow(m_window);
-    m_eventhandler.SetRenderer(&m_renderer);
-    is_init = true;
-    return true;
+    return m_pVS;
+}
+
+void MainWindow::setCube(std::shared_ptr<cubes_t> cubes)
+{
+    m_pCubeData = cubes;
+}
+
+void MainWindow::setRSteps(std::shared_ptr<CubeSteps> steps)
+{
+    m_pRSteps = steps;
+}
+
+void MainWindow::setResetHandler(std::shared_ptr<ICommandBase> reset)
+{
+    m_pResetHandler = reset;
+}
+
+void MainWindow::setRandomHandler(std::shared_ptr<ICommandBase> random)
+{
+    m_pRandomHandler = random;
+}
+
+void MainWindow::setRotateHandler(std::shared_ptr<ICommandBase> rotate)
+{
+    m_pRotateHandler = rotate;
+}
+
+void MainWindow::setSaveHandler(std::shared_ptr<ICommandBase> save)
+{
+    m_pSaveHandler = save;
+}
+
+void MainWindow::setLoadHandler(std::shared_ptr<ICommandBase> load)
+{
+    m_pLoadHandler = load;
+}
+
+void MainWindow::setSolveHandler(std::shared_ptr<ICommandBase> solve)
+{
+    m_pSolveHandler = solve;
+}
+
+void MainWindow::setStopHandler(std::shared_ptr<ICommandBase> stop)
+{
+    m_pStopHandler = stop;
 }
 
 void MainWindow::show()
 {
-    // initialization failed
-    if(!is_init && !init()) return;
-    // Loop until the user closes the window
-    while (!glfwWindowShouldClose(m_window)) {
-        m_renderer.GetRotateController()->nextFrame();
-        m_renderer.render();
-
-        // Swap front and back buffers
-        glfwSwapBuffers(m_window);
-
-        // Poll for and process events
+    // loop until the user closes the window
+    while (!glfwWindowShouldClose(m_pWindow)) {
+        // used for debug
+        std::string title("Rubic Cube Simulator : " + std::to_string(m_pRenderer->getRenderState()));
+        // std::string title("Rubic Cube Simulator : " + m_pEventCallback->getCommandBuffer());
+        glfwSetWindowTitle(m_pWindow, title.c_str());
+        // get next frame, may do nothing
+        m_pRotAni->nextFrame();
+        // render, may do nothing
+        m_pRenderer->render();
+        // poll for and process events
         glfwPollEvents();
 
-        m_eventhandler.keyboardScan();
-        m_eventhandler.mouseMove();
+        m_pEventCallback->keyboardScan();
+        m_pEventCallback->mouseMove();
     }
-
     glfwTerminate();
+}
+
+bool MainWindow::init()
+{
+    // initialize library
+    if(!glfwInit()) return false;
+    // enable multi-sampling
+    glfwWindowHint(GLFW_SAMPLES, 9);
+    // create a windowed mode window and its OpenGL context
+    m_pWindow = glfwCreateWindow(WIDTH, HEIGHT, "Rubic Cube Simulator", NULL, NULL);
+    if (!m_pWindow) {
+        glfwTerminate();
+        return false;
+    }
+    // make the window's context current
+    glfwMakeContextCurrent(m_pWindow);
+    // set window user pointer to the event handler
+    glfwSetWindowUserPointer(m_pWindow, m_pEventCallback.get());
+    // initialize event callbacks
+    // bind mouse button callback
+    auto MouseCallBack =
+            [](GLFWwindow *window, int button, int action, int mods) {
+                EventCallback* pEventCallback = reinterpret_cast<EventCallback*>(glfwGetWindowUserPointer(window));
+                pEventCallback->mouseButtonCallback(window, button, action, mods);
+            };
+    glfwSetMouseButtonCallback(m_pWindow, MouseCallBack);
+    // bind keyboard callback
+    auto KeyBoardCallBack =
+            [](GLFWwindow *window, int key, int scancode, int action, int mods) {
+                EventCallback* pEventCallback = reinterpret_cast<EventCallback*>(glfwGetWindowUserPointer(window));
+                pEventCallback->keyboardCallback(window, key, scancode, action, mods);
+            };
+    glfwSetKeyCallback(m_pWindow, KeyBoardCallBack);
+    // bind character callback
+    auto CharCallBack =
+            [](GLFWwindow *window, unsigned int codepoint) {
+                EventCallback* pEventCallback = reinterpret_cast<EventCallback*>(glfwGetWindowUserPointer(window));
+                pEventCallback->characterCallback(window, codepoint);
+            };
+    glfwSetCharCallback(m_pWindow, CharCallBack);
+    // initialize OPENGL
+    initGL();
+    // set swap interval
+    glfwSwapInterval(1);
+    return true;
 }
 
 void MainWindow::createViewMatrix(float eyeX, float eyeY, float eyeZ,
@@ -118,14 +166,14 @@ void MainWindow::createViewMatrix(float eyeX, float eyeY, float eyeZ,
             s[2] / sLength
     };
 
-    // Calculate the up vector
+    // calculate the up vector
     float uNormalized[3] = {
             sNormalized[1] * fNormalized[2] - sNormalized[2] * fNormalized[1],
             sNormalized[2] * fNormalized[0] - sNormalized[0] * fNormalized[2],
             sNormalized[0] * fNormalized[1] - sNormalized[1] * fNormalized[0]
     };
 
-    // Build the view matrix
+    // build the view matrix
     viewMatrix[0] = sNormalized[0];
     viewMatrix[1] = uNormalized[0];
     viewMatrix[2] = -fNormalized[0];
@@ -150,30 +198,29 @@ void MainWindow::createViewMatrix(float eyeX, float eyeY, float eyeZ,
 void MainWindow::initGL()
 {
     // init OpenGL
-    glEnable(GL_DEPTH_TEST);// Enable depth testing for 3D rendering
-    glDepthFunc(GL_LESS); // Specify the depth comparison function
-    glPointSize(8);// Set the size of rendered points
-    glLineWidth(2);// Set the width of rendered lines
-    glEnable(GL_POINT_SMOOTH);// Enable point smoothing for smoother point rendering
-    glEnable(GL_LINE_SMOOTH);// Enable line smoothing for smoother line rendering
-    glEnable(GL_POLYGON_SMOOTH);// Enable polygon smoothing for smoother polygon rendering
-    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST); // Make round points, not square points
-    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);  // Antialias the lines
+    glEnable(GL_DEPTH_TEST); // enable depth testing for 3D rendering
+    glDepthFunc(GL_LESS); // specify the depth comparison function
+    glPointSize(8); // set the size of rendered points
+    glLineWidth(2); // set the width of rendered lines
+    glEnable(GL_POINT_SMOOTH); // enable point smoothing for smoother point rendering
+    glEnable(GL_LINE_SMOOTH); // enable line smoothing for smoother line rendering
+    glEnable(GL_POLYGON_SMOOTH); // enable polygon smoothing for smoother polygon rendering
+    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST); // make round points, not square points
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);  // antialias the lines
     glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-    glEnable(GL_BLEND);// Enable blending of colors
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);// Specify the blending function
-    glViewport(0, 0, WIDTH, HEIGHT);// Set the viewport size
-    glMatrixMode(GL_PROJECTION);// Set the matrix mode to projection
-    glLoadIdentity();// Load the identity matrix
-    GLdouble rFov = 45.0f * 3.14159265 / 180.0;// Calculate the vertical field of view in radians
+    glEnable(GL_BLEND); // enable blending of colors
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // specify the blending function
+    glViewport(0, 0, WIDTH, HEIGHT); // set the viewport size
+    glMatrixMode(GL_PROJECTION); // set the matrix mode to projection
+    glLoadIdentity(); // load the identity matrix
+    GLdouble rFov = 45.0f * 3.14159265 / 180.0; // calculate the vertical field of view in radians
     glFrustum( -0.1f * tan( rFov / 2.0 ) * (float)(WIDTH) / (float)(HEIGHT),
                0.1f * tan( rFov / 2.0 ) * (float)(WIDTH) / (float)(HEIGHT),
                -0.1f * tan( rFov / 2.0 ),
                0.1f * tan( rFov / 2.0 ),
-               0.1f, 1000.0f );// Set the frustum perspective projection
-    glMatrixMode(GL_MODELVIEW);// Set the matrix mode to modelview
-    glLoadIdentity();// Load the identity matrix
-    // gluLookAt(0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+               0.1f, 1000.0f ); // set the frustum perspective projection
+    glMatrixMode(GL_MODELVIEW); // set the matrix mode to modelview
+    glLoadIdentity(); // load the identity matrix
     GLfloat ff[16];
     createViewMatrix(0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, ff);
     glLoadMatrixf(ff);
