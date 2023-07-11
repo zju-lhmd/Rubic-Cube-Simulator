@@ -1,82 +1,71 @@
-#include "Rendering.h"
+#include "Renderer.h"
 
-Renderer::Renderer(RotateController* rotateControllerRef, GLfloat angleX, GLfloat angleY)
-    : rotateControllerRef(rotateControllerRef), m_viewRotationAngleX(angleX),
-      m_viewRotationAngleY(angleY), isTransparent(false)
+#include "../MainWindow.h"
+
+Renderer::Renderer(MainWindow* pV)
+: m_pV(pV), m_renderState(1),
+  m_viewAngleX(DEFAULT_VIEW_ANGLE_X), m_viewAngleY(DEFAULT_VIEW_ANGLE_Y),
+  m_isTransparent(false)
 {
 }
+
 Renderer::~Renderer()
 {
 }
 
-GLfloat Renderer::GetViewRotationAngleX()
+void Renderer::incViewAngleX(GLfloat dx)
 {
-    return m_viewRotationAngleX;
+    m_viewAngleX += dx;
 }
 
-GLfloat Renderer::GetViewRotationAngleY()
+void Renderer::incViewAngleY(GLfloat dy)
 {
-    return m_viewRotationAngleY;
+    m_viewAngleY += dy;
 }
 
-void Renderer::SetViewRotationAngleX(GLfloat angleX)
+void Renderer::switchViewMode()
 {
-    m_viewRotationAngleX = angleX;
+    m_isTransparent = !m_isTransparent;
 }
 
-void Renderer::SetViewRotaionAngleY(GLfloat angleY)
+int Renderer::getRenderState()
 {
-    m_viewRotationAngleY = angleY;
+	return m_renderState;
 }
 
-void Renderer::incViewRotationAngleX(GLfloat dx)
+void Renderer::setRenderState(int state)
 {
-    m_viewRotationAngleX += dx;
-}
-
-void Renderer::incViewRotationAngleY(GLfloat dy)
-{
-    m_viewRotationAngleY += dy;
-}
-
-void Renderer::SwitchViewMode()
-{
-    isTransparent = !isTransparent;
-}
-
-void Renderer::SetRotateController(RotateController* rc)
-{
-    rotateControllerRef = rc;
+	m_renderState = state;
 }
 
 void Renderer::setColor(CubeColor color)
 {
 	GLfloat alpha = 1.0f;
-	if(isTransparent) {
+	if(m_isTransparent) {
 		alpha = 0.5f;
 	}
 
 	switch (color) {
 	case COLOR_UNUSED:
-		glColor4f(0.5f, 0.5f, 0.5f, alpha);
+		glColor4f(RGB_GRAY, alpha);
 		break;
 	case COLOR_BLUE:
-		glColor4f(0.0f, 0.0f, 1.0f, alpha);
+		glColor4f(RGB_BLUE, alpha);
 		break;
 	case COLOR_GREEN:
-		glColor4f(0.0f, 1.0f, 0.0f, alpha);
+		glColor4f(RGB_GREEN, alpha);
 		break;
 	case COLOR_ORANGE:
-		glColor4f(1.0f, 0.5f, 0.0f, alpha);
+		glColor4f(RGB_ORANGE, alpha);
 		break;
 	case COLOR_RED:
-		glColor4f(1.0f, 0.0f, 0.0f, alpha);
+		glColor4f(RGB_RED, alpha);
 		break;
 	case COLOR_WHITE:
-		glColor4f(1.0f, 1.0f, 1.0f, alpha);
+		glColor4f(RGB_WHITE, alpha);
 		break;
 	case COLOR_YELLOW:
-		glColor4f(1.0f, 1.0f, 0.0f, alpha);
+		glColor4f(RGB_YELLOW, alpha);
 		break;
 	default:
 		break;
@@ -94,63 +83,63 @@ void Renderer::renderSubCube(GLfloat x, GLfloat y, GLfloat z, cube_t colorInfo)
 	setColor((CubeColor)GET_FRONT(colorInfo));
 	glBegin(GL_TRIANGLES);
 	for (int i = 0; i < 6; ++i) {
-		glVertex3f(VertexData[i * 3 + 0],
-			VertexData[i * 3 + 1],
-			VertexData[i * 3 + 2]);
+		glVertex3f(s_vertexData[i * 3 + 0],
+			s_vertexData[i * 3 + 1],
+			s_vertexData[i * 3 + 2]);
 	}
 	glEnd();
 
 	setColor((CubeColor)GET_BACK(colorInfo));
 	glBegin(GL_TRIANGLES);
 	for (int i = 6; i < 12; ++i) {
-		glVertex3f(VertexData[i * 3 + 0],
-			VertexData[i * 3 + 1],
-			VertexData[i * 3 + 2]);
+		glVertex3f(s_vertexData[i * 3 + 0],
+			s_vertexData[i * 3 + 1],
+			s_vertexData[i * 3 + 2]);
 	}
 	glEnd();
 
 	setColor((CubeColor)GET_LEFT(colorInfo));
 	glBegin(GL_TRIANGLES);
 	for (int i = 12; i < 18; ++i) {
-		glVertex3f(VertexData[i * 3 + 0],
-			VertexData[i * 3 + 1],
-			VertexData[i * 3 + 2]);
+		glVertex3f(s_vertexData[i * 3 + 0],
+			s_vertexData[i * 3 + 1],
+			s_vertexData[i * 3 + 2]);
 	}
 	glEnd();
 
 	setColor((CubeColor)GET_RIGHT(colorInfo));
 	glBegin(GL_TRIANGLES);
 	for (int i = 18; i < 24; ++i) {
-		glVertex3f(VertexData[i * 3 + 0],
-			VertexData[i * 3 + 1],
-			VertexData[i * 3 + 2]);
+		glVertex3f(s_vertexData[i * 3 + 0],
+			s_vertexData[i * 3 + 1],
+			s_vertexData[i * 3 + 2]);
 	}
 	glEnd();
 
 	setColor((CubeColor)GET_UP(colorInfo));
 	glBegin(GL_TRIANGLES);
 	for (int i = 24; i < 30; ++i) {
-		glVertex3f(VertexData[i * 3 + 0],
-			VertexData[i * 3 + 1],
-			VertexData[i * 3 + 2]);
+		glVertex3f(s_vertexData[i * 3 + 0],
+			s_vertexData[i * 3 + 1],
+			s_vertexData[i * 3 + 2]);
 	}
 	glEnd();
 
 	setColor((CubeColor)GET_DOWN(colorInfo));
 	glBegin(GL_TRIANGLES);
 	for (int i = 30; i < 36; ++i) {
-		glVertex3f(VertexData[i * 3 + 0],
-			VertexData[i * 3 + 1],
-			VertexData[i * 3 + 2]);
+		glVertex3f(s_vertexData[i * 3 + 0],
+			s_vertexData[i * 3 + 1],
+			s_vertexData[i * 3 + 2]);
 	}
 	glEnd();
 
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 	glBegin(GL_LINES);
 	for (int i = 0; i < 24; ++i) {
-		glVertex3f(EdgeData[i * 3 + 0],
-			EdgeData[i * 3 + 1],
-			EdgeData[i * 3 + 2]);
+		glVertex3f(s_edgeData[i * 3 + 0],
+			s_edgeData[i * 3 + 1],
+			s_edgeData[i * 3 + 2]);
 	}
 	glEnd();
 
@@ -313,38 +302,39 @@ void Renderer::renderCube(cubes_t& cube, float angle, CubeRotateMethod method)
 	}
 }
 
-RotateController* Renderer::GetRotateController() {
-    return rotateControllerRef;
-}
-
 void Renderer::render()
 {
-    // render background
-	glClearColor(BACKGROUND_COLOR);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // flush screen
-	glFlush();
-    // set view rotation model
-	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, -10.0f);
-	glPushMatrix();
-	glRotatef(m_viewRotationAngleX, 1.0f, 0.0f, 0.0f);
-	glPushMatrix();
-	glRotatef(m_viewRotationAngleY, 0.0f, 1.0f, 0.0f);
-    // render cube
-    cubes_t cube = rotateControllerRef->GetCubeData();
-	renderCube(cube,
-               (GLfloat)rotateControllerRef->GetRotateAngle(),
-               rotateControllerRef->GetRotateMethod());
-    // pop model
-	glPopMatrix();
-	glPopMatrix();
-	glPopMatrix();
-    // flush screen
-	glFlush();
+	if(m_renderState > 0) {
+		// render background
+		glClearColor(BACKGROUND_COLOR);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// flush screen
+		glFlush();
+		// set view rotation model
+		glPushMatrix();
+		glTranslatef(0.0f, 0.0f, -10.0f);
+		glPushMatrix();
+		glRotatef(m_viewAngleX, 1.0f, 0.0f, 0.0f);
+		glPushMatrix();
+		glRotatef(m_viewAngleY, 0.0f, 1.0f, 0.0f);
+		// render cube
+		cubes_t cube = *(m_pV->m_pCubeData);
+		renderCube(cube, 
+				(GLfloat)(m_pV->m_pRotAni->getRotAngle()), 
+				m_pV->m_pRotAni->getRotMethod());
+		// pop model
+		glPopMatrix();
+		glPopMatrix();
+		glPopMatrix();
+		// flush screen
+		glFlush();
+		// swap buffers
+		glfwSwapBuffers(m_pV->m_pWindow);
+		if(m_renderState == 1) m_renderState = 0;
+	}
 }
 
-const GLfloat Renderer::VertexData[] = {
+const GLfloat Renderer::s_vertexData[] = {
         // Front Face (2 triangles)
         0.0f, 0.0f, 1.0f,
         0.0f, 1.0f, 1.0f,
@@ -389,7 +379,7 @@ const GLfloat Renderer::VertexData[] = {
         0.0f, 0.0f, 1.0f
 };
 
-const GLfloat Renderer::EdgeData[] = {
+const GLfloat Renderer::s_edgeData[] = {
         // Every 2 vetexes represents an edge
         0.0f, 1.0f, 0.0f,
         0.0f, 1.0f, 1.0f,
