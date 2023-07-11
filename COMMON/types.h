@@ -62,9 +62,5 @@ enum CubeRotateMethod
 
 typedef std::vector<CubeRotateMethod> CubeSteps;
 
-extern std::map<CubeRotateMethod, std::string> CubeRotateMethodName;
-extern std::map<CubeRotateMethod, std::string> CubeRotateMethodEnumName;
-extern std::map<std::string, CubeRotateMethod> NameToCubeRotateMethod;
-
 
 #endif
