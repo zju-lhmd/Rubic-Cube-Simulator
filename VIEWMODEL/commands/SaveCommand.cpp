@@ -22,5 +22,4 @@ void SaveCommand::exec()
         file.close();
     }
     // if file not open, abort
-    m_pVM->notifyAllObservers(0);
 }

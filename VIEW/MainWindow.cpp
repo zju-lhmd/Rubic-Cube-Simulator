@@ -68,13 +68,8 @@ void MainWindow::show()
     // loop until the user closes the window
     while (!glfwWindowShouldClose(m_pWindow)) {
         // used for debug
-<<<<<<< HEAD
         std::string title("Rubic Cube Simulator : " + std::to_string(m_pRenderer->getRenderState()));
         // std::string title("Rubic Cube Simulator : " + m_pEventCallback->getCommandBuffer());
-=======
-        // std::string title("Rubic Cube Simulator : " + std::to_string(m_pRenderer->getRenderState()));
-        std::string title("Rubic Cube Simulator : " + m_pEventCallback->getCommandBuffer());
->>>>>>> 1bd489467499f20471035c2d56f17ad51d48fd8b
         glfwSetWindowTitle(m_pWindow, title.c_str());
         // get next frame, may do nothing
         m_pRotAni->nextFrame();
@@ -130,7 +125,7 @@ bool MainWindow::init()
     // initialize OPENGL
     initGL();
     // set swap interval
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
     return true;
 }
 

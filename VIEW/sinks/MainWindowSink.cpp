@@ -13,7 +13,7 @@ void MainWindowSink::notify(const std::any& msg)
     m_pV->m_pRenderer->setRenderState(state);
     switch(state) {
         case 2: m_pV->m_pRotAni->play(); break;
-        case 1: // down through
+        case 1: break;
         case 0: m_pV->m_pRotAni->stopPlay(); break;
     }
     return ;

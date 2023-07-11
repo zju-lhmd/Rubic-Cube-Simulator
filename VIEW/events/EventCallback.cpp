@@ -42,7 +42,8 @@ void EventCallback::mouseMove()
 	m_pV->m_pRenderer->incViewAngleY(dX * 0.5); // updates the Y rotation angle of the view
     m_pV->m_pRenderer->incViewAngleX(dY * 0.5); // updates the X rotation angle of the view
 
-	m_pV->m_pRenderer->setRenderState(1);
+	if(m_pV->m_pRenderer->getRenderState() == 0)
+		m_pV->m_pRenderer->setRenderState(1);
 	m_lastX = currX; m_lastY = currY;
 }
 
@@ -105,18 +106,22 @@ void EventCallback::keyboardScan()
 {
 	if(glfwGetKey(m_pV->m_pWindow, GLFW_KEY_LEFT) == GLFW_PRESS) { // move left
 		m_pV->m_pRenderer->incViewAngleY(-0.11f);
-		m_pV->m_pRenderer->setRenderState(1);
+		if(m_pV->m_pRenderer->getRenderState() == 0)
+			m_pV->m_pRenderer->setRenderState(1);
 	}
 	if(glfwGetKey(m_pV->m_pWindow, GLFW_KEY_RIGHT) == GLFW_PRESS) { // move right
         m_pV->m_pRenderer->incViewAngleY(0.11f);
-		m_pV->m_pRenderer->setRenderState(1);
+		if(m_pV->m_pRenderer->getRenderState() == 0)
+			m_pV->m_pRenderer->setRenderState(1);
 	}
 	if(glfwGetKey(m_pV->m_pWindow, GLFW_KEY_UP) == GLFW_PRESS) { // move up
         m_pV->m_pRenderer->incViewAngleX(-0.15f);
-		m_pV->m_pRenderer->setRenderState(1);
+		if(m_pV->m_pRenderer->getRenderState() == 0)
+			m_pV->m_pRenderer->setRenderState(1);
 	}
 	if(glfwGetKey(m_pV->m_pWindow, GLFW_KEY_DOWN) == GLFW_PRESS) { // move down
         m_pV->m_pRenderer->incViewAngleX(0.15f);
-		m_pV->m_pRenderer->setRenderState(1);
+		if(m_pV->m_pRenderer->getRenderState() == 0)
+			m_pV->m_pRenderer->setRenderState(1);
 	}
 }

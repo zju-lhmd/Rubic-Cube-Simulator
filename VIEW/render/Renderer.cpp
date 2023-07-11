@@ -306,6 +306,7 @@ void Renderer::render()
 {
 	if(m_renderState > 0) {
 		// render background
+		if(m_renderState == 1) m_renderState = 0; // just update
 		glClearColor(BACKGROUND_COLOR);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// flush screen
@@ -330,7 +331,6 @@ void Renderer::render()
 		glFlush();
 		// swap buffers
 		glfwSwapBuffers(m_pV->m_pWindow);
-		if(m_renderState == 1) m_renderState = 0;
 	}
 }
 
