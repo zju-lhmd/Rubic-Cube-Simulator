@@ -22,16 +22,6 @@ std::string toLowerString(std::string str)
 	return str;
 }
 
-std::string stepsToString(CubeSteps steps, char delim)
-{
-	std::string r;
-	ptrdiff_t size = steps.size();
-	for (ptrdiff_t i = 0; i < size; ++i) {
-		r += CubeRotateMethodName[steps[i]] + delim;
-	}
-	return r;
-}
-
 CubeRotateMethod inverse(CubeRotateMethod m)
 {
 	if (m < ROTATE_NONEi) {
@@ -53,4 +43,11 @@ void copySteps(CubeSteps &src, CubeSteps &dest)
 bool isWholeRotate(CubeRotateMethod m)
 {
 	return (m >= ROTATE_WHOLEX && m <= ROTATE_WHOLEZ) || (m >= ROTATE_WHOLEXi && m <= ROTATE_WHOLEZi);
+}
+
+double GetTime() 
+{
+	auto now = std::chrono::high_resolution_clock::now();
+    auto duration = now.time_since_epoch();
+    return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() / 1000.0;
 }
