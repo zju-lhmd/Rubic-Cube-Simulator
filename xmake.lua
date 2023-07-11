@@ -15,5 +15,5 @@ end
 target("RubicCubeSimulator")
     add_packages("glfw")
     set_kind("binary")
-    add_files("*/*.cpp", "main.cpp")
+    add_files("**.cpp")
     set_targetdir("./build")

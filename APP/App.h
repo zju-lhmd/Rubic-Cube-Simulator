@@ -3,9 +3,10 @@
 
 #include <ctime>
 #include <cstdlib>
+#include <memory>
 
 #include "../VIEW/MainWindow.h" // view
-#include "../VIEWMODEL/CommandHandlers.h" // viewmodel
+#include "../VIEWMODEL/ViewModel.h" // viewmodel
 #include "../MODEL/Cube.h" // model
 
 // Rubic Cube Simulator App
@@ -14,15 +15,18 @@ public:
     App();
 
     ~App();
+    // init app
+    bool init();
     // Run app
     void Run();
+
 private:
     // model
-    Cube m_cube;
+    std::shared_ptr<Cube> m_pCubeModel;
     // viewmodel
-    CommandHandler m_commandhandler;
+    std::shared_ptr<ViewModel> m_pViewModel;
     // view
-    MainWindow m_window;
+    MainWindow m_mainWindow;
 };
 
 
