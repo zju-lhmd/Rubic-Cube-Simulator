@@ -68,8 +68,8 @@ void MainWindow::show()
     // loop until the user closes the window
     while (!glfwWindowShouldClose(m_pWindow)) {
         // used for debug
-        std::string title("Rubic Cube Simulator : " + std::to_string(m_pRenderer->getRenderState()));
-        // std::string title("Rubic Cube Simulator : " + m_pEventCallback->getCommandBuffer());
+        // std::string title("Rubic Cube Simulator : " + std::to_string(m_pRenderer->getRenderState()));
+        std::string title("Rubic Cube Simulator : " + m_pEventCallback->getCommandBuffer());
         glfwSetWindowTitle(m_pWindow, title.c_str());
         // get next frame, may do nothing
         m_pRotAni->nextFrame();
