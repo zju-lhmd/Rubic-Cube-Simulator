@@ -10,14 +10,14 @@
 #include "../COMMON/Notification.h" // common
 #include "../MODEL/Cube.h" // model
 // viewmodel (commands)
-class RotateCommand;
-class ResetCommand;
-class RandomCommand;
-class SolveCommand;
-class StopCommand;
-class SaveCommand;
-class LoadCommand;
-class ViewModelSink;
+#include "commands/RotateCommand.h"
+#include "commands/ResetCommand.h"
+#include "commands/RandomCommand.h"
+#include "commands/SolveCommand.h"
+#include "commands/StopCommand.h"
+#include "commands/SaveCommand.h"
+#include "commands/LoadCommand.h"
+#include "commands/RotEndCommand.h"
 
 class ViewModel: public Notification {
 public:
@@ -31,8 +31,6 @@ public:
 
     std::shared_ptr<cubes_t> getCubeData();
     std::shared_ptr<CubeSteps> getSteps();
-
-    std::shared_ptr<INotification> getSink();
     
     std::shared_ptr<ICommandBase> getRotateCmd();
     std::shared_ptr<ICommandBase> getResetCmd();
@@ -41,6 +39,7 @@ public:
     std::shared_ptr<ICommandBase> getLoadCmd();
     std::shared_ptr<ICommandBase> getSolveCmd();
     std::shared_ptr<ICommandBase> getStopCmd();
+    std::shared_ptr<ICommandBase> getRotEndCmd();
 
 private:
     // properties
@@ -55,9 +54,7 @@ private:
     std::shared_ptr<LoadCommand> m_pLoadCommand;
     std::shared_ptr<SolveCommand> m_pSolveCommand;
     std::shared_ptr<StopCommand> m_pStopCommand;
-
-    // sinks
-    std::shared_ptr<ViewModelSink> m_pVMS;
+    std::shared_ptr<RotEndCommand> m_pRotEndCommand;
 
 private:
     friend class RotateCommand;
@@ -67,8 +64,7 @@ private:
     friend class StopCommand;
     friend class SaveCommand;
     friend class LoadCommand;
-
-    friend class ViewModelSink;
+    friend class RotEndCommand;
 };
 
 #endif
