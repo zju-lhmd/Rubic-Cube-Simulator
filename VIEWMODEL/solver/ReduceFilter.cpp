@@ -11,6 +11,24 @@ CubeSteps ReduceFilter::Filter(CubeSteps &steps)
 	return newSteps;
 }
 
+CubeRotateMethod ReduceFilter::inverse(CubeRotateMethod m)
+{
+	if (m < ROTATE_NONEi) {
+		return (CubeRotateMethod)(m + (ROTATE_NONEi - ROTATE_NONE)); //inverse
+	}else {
+		return (CubeRotateMethod)(m - (ROTATE_NONEi - ROTATE_NONE)); //inverse
+	}
+}
+
+void ReduceFilter::copySteps(CubeSteps &src, CubeSteps &dest)
+{
+	size_t size = src.size();
+	for (ptrdiff_t i = 0; i < (ptrdiff_t)size; ++i) {
+		if (src[i] != ROTATE_NONE && src[i] != ROTATE_NONEi)
+			dest.push_back(src[i]);
+	}
+}
+
 bool ReduceFilter::ReduceContinuous(CubeSteps &steps)
 {
 	size_t size = steps.size();

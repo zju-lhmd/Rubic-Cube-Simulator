@@ -1,5 +1,19 @@
 #include "NoXYZFilter.h"
 
+void NoXYZFilter::copySteps(CubeSteps &src, CubeSteps &dest)
+{
+	size_t size = src.size();
+	for (ptrdiff_t i = 0; i < (ptrdiff_t)size; ++i) {
+		if (src[i] != ROTATE_NONE && src[i] != ROTATE_NONEi)
+			dest.push_back(src[i]);
+	}
+}
+
+bool NoXYZFilter::isWholeRotate(CubeRotateMethod m)
+{
+	return (m >= ROTATE_WHOLEX && m <= ROTATE_WHOLEZ) || (m >= ROTATE_WHOLEXi && m <= ROTATE_WHOLEZi);
+}
+
 CubeSteps NoXYZFilter::Filter(CubeSteps &steps) {
 	CubeSteps newSteps = steps;
 	auto currentMap = XYZMapTables[ROTATE_NONE];

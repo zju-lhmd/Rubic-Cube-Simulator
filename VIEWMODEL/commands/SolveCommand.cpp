@@ -21,9 +21,11 @@ void SolveCommand::exec()
 	solver.solve();
 	CubeSteps steps = solver.GetSteps();
 	// optimize steps
-	steps = ReduceFilter::Filter(steps);
-	steps = NoXYZFilter::Filter(steps);
-	steps = ReduceFilter::Filter(steps);
+	ReduceFilter rf;
+	steps = rf.Filter(steps);
+	NoXYZFilter nxyzf;
+	steps = nxyzf.Filter(steps);
+	steps = rf.Filter(steps);
 	// start play steps
 	*m_pVM->m_pRSteps = steps;
 	m_pVM->notifyAllObservers(2);

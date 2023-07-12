@@ -10,12 +10,14 @@
 
 class NoXYZFilter {
 public:
-	static CubeSteps Filter(CubeSteps&);
+	CubeSteps Filter(CubeSteps&);
 
     static std::map<CubeRotateMethod, std::map<CubeRotateMethod, CubeRotateMethod> > XYZMapTables;
 	
 private:
-	static void CombineMapTable(std::map<CubeRotateMethod, CubeRotateMethod>&, std::map<CubeRotateMethod, CubeRotateMethod>&);
+	void CombineMapTable(std::map<CubeRotateMethod, CubeRotateMethod>&, std::map<CubeRotateMethod, CubeRotateMethod>&);
+	bool isWholeRotate(CubeRotateMethod m);
+	void copySteps(CubeSteps &src, CubeSteps &dest);
 };
 
 

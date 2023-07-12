@@ -9,11 +9,13 @@
 
 class ReduceFilter {
 public:
-	static CubeSteps Filter(CubeSteps&);
+	CubeSteps Filter(CubeSteps&);
 
 private:
-	static bool ReduceContinuous(CubeSteps&);
-	static bool ReduceInverse(CubeSteps&);
+	bool ReduceContinuous(CubeSteps&);
+	bool ReduceInverse(CubeSteps&);
+	CubeRotateMethod inverse(CubeRotateMethod m);
+	void copySteps(CubeSteps &src, CubeSteps &dest);
 };
 
 #endif
