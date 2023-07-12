@@ -304,7 +304,7 @@ void Renderer::renderCube(cubes_t& cube, float angle, CubeRotateMethod method)
 
 void Renderer::render()
 {
-	if(m_renderState > 0) {
+//	if(m_renderState > 0) {
 		// render background
 		if(m_renderState == 1) m_renderState = 0; // just update
 		glClearColor(BACKGROUND_COLOR);
@@ -331,7 +331,7 @@ void Renderer::render()
 		glFlush();
 		// swap buffers
 		glfwSwapBuffers(m_pV->m_pWindow);
-	}
+//	}
 }
 
 const GLfloat Renderer::s_vertexData[] = {

@@ -131,7 +131,7 @@ bool MainWindow::init()
     // initialize OPENGL
     initGL();
     // set swap interval
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
     return true;
 }
 
