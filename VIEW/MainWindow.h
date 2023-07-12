@@ -40,6 +40,7 @@ public:
     void setLoadHandler(std::shared_ptr<ICommandBase> load);
     void setSolveHandler(std::shared_ptr<ICommandBase> solve);
     void setStopHandler(std::shared_ptr<ICommandBase> stop);
+    void setRotEndHandler(std::shared_ptr<ICommandBase> rotEnd);
 
 private:
     // only called in MainWindow::init()
@@ -63,6 +64,7 @@ private:
     std::shared_ptr<ICommandBase> m_pLoadHandler;
     std::shared_ptr<ICommandBase> m_pSolveHandler;
     std::shared_ptr<ICommandBase> m_pStopHandler;
+    std::shared_ptr<ICommandBase> m_pRotEndHandler;
 
     // sinks
     std::shared_ptr<MainWindowSink> m_pVS;

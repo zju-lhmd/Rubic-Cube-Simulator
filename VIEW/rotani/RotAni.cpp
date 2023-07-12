@@ -5,7 +5,7 @@
 RotAni::RotAni(MainWindow* pV)
 : m_pV(pV),
   m_playing(false), m_playIndex(0),
-  m_lastPlayTime(GetTime()),
+  m_lastPlayTime(glfwGetTime()),
   m_rotAngle(0.0), m_rotMethod(ROTATE_NONE)
 {
 }
@@ -38,7 +38,8 @@ void RotAni::rotateFinishCallback()
 {
     if(m_rotMethod == ROTATE_NONE) return;
 
-    m_pV->notifyAllObservers(m_rotMethod);
+    m_pV->m_pRotEndHandler->setParameter(m_rotMethod);
+    m_pV->m_pRotEndHandler->exec();
 
     m_rotAngle = 0.0;
     m_rotMethod = ROTATE_NONE;
@@ -48,7 +49,7 @@ void RotAni::rotateFinishCallback()
 
 void RotAni::nextFrame()
 {
-    double currentTime = GetTime();
+    double currentTime = glfwGetTime();
 
     if(m_rotMethod != ROTATE_NONE) {
         if(m_pV->m_pRenderer->getRenderState() == 0) // finish incomplete rotation
@@ -76,12 +77,13 @@ void RotAni::startRotate(CubeRotateMethod method)
         finishCurrentRotate();
     // start new single rotation
     m_rotMethod = method;
-    m_lastPlayTime = GetTime();
+    m_lastPlayTime = glfwGetTime();
 }
 
 void RotAni::play()
 {
     if(m_pV->m_pRSteps->size() <= 0) return;
+    m_pV->m_pRenderer->setRenderState(2);
     m_playIndex = 0;
     m_playing = true;
     startRotate(m_pV->m_pRSteps->at(m_playIndex));
