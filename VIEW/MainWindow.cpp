@@ -63,13 +63,19 @@ void MainWindow::setStopHandler(std::shared_ptr<ICommandBase> stop)
     m_pStopHandler = stop;
 }
 
+void MainWindow::setRotEndHandler(std::shared_ptr<ICommandBase> rotEnd)
+{
+    m_pRotEndHandler = rotEnd;
+}
+
 void MainWindow::show()
 {
     // loop until the user closes the window
     while (!glfwWindowShouldClose(m_pWindow)) {
-        // used for debug
-        std::string title("Rubic Cube Simulator : " + std::to_string(m_pRenderer->getRenderState()));
-        // std::string title("Rubic Cube Simulator : " + m_pEventCallback->getCommandBuffer());
+        // window state
+        std::string stt(std::string(m_pRenderer->getRenderState(), '@'));
+        std::string cmd(m_pEventCallback->getCommandBuffer());
+        std::string title(stt + "=Rubic Cube Simulator=" + cmd);
         glfwSetWindowTitle(m_pWindow, title.c_str());
         // get next frame, may do nothing
         m_pRotAni->nextFrame();

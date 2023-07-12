@@ -1,13 +1,12 @@
 #include "ViewModel.h"
 
-#include "commands/RotateCommand.h"
-#include "commands/ResetCommand.h"
-#include "commands/RandomCommand.h"
-#include "commands/SolveCommand.h"
-#include "commands/StopCommand.h"
-#include "commands/SaveCommand.h"
-#include "commands/LoadCommand.h"
-#include "sinks/ViewModelSink.h"
+// #include "commands/RotateCommand.h"
+// #include "commands/ResetCommand.h"
+// #include "commands/RandomCommand.h"
+// #include "commands/SolveCommand.h"
+// #include "commands/StopCommand.h"
+// #include "commands/SaveCommand.h"
+// #include "commands/LoadCommand.h"
 
 ViewModel::ViewModel(): m_pResetCommand(std::make_shared<ResetCommand>(this)),
 						m_pRandomCommand(std::make_shared<RandomCommand>(this)),
@@ -16,8 +15,8 @@ ViewModel::ViewModel(): m_pResetCommand(std::make_shared<ResetCommand>(this)),
 						m_pStopCommand(std::make_shared<StopCommand>(this)),
 						m_pSaveCommand(std::make_shared<SaveCommand>(this)),
 						m_pLoadCommand(std::make_shared<LoadCommand>(this)),
-						m_pRSteps(std::make_shared<CubeSteps>()),
-						m_pVMS(std::make_shared<ViewModelSink>(this))
+						m_pRotEndCommand(std::make_shared<RotEndCommand>(this)),
+						m_pRSteps(std::make_shared<CubeSteps>())
 {
 	init();
 }
@@ -34,11 +33,6 @@ void ViewModel::init()
 void ViewModel::setCubeModel(std::shared_ptr<Cube> cube)
 {
 	m_pCube = cube;
-}
-
-std::shared_ptr<INotification> ViewModel::getSink()
-{
-	return m_pVMS;
 }
 
 std::shared_ptr<cubes_t> ViewModel::getCubeData()
@@ -84,4 +78,9 @@ std::shared_ptr<ICommandBase> ViewModel::getSolveCmd()
 std::shared_ptr<ICommandBase> ViewModel::getStopCmd()
 {
 	return m_pStopCommand;
+}
+
+std::shared_ptr<ICommandBase> ViewModel::getRotEndCmd()
+{
+	return m_pRotEndCommand;
 }

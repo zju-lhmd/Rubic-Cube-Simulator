@@ -30,9 +30,9 @@ bool App::init()
     m_mainWindow.setLoadHandler(m_pViewModel->getLoadCmd());
     m_mainWindow.setSolveHandler(m_pViewModel->getSolveCmd());
     m_mainWindow.setStopHandler(m_pViewModel->getStopCmd());
+    m_mainWindow.setRotEndHandler(m_pViewModel->getRotEndCmd());
     // notifications
     m_pViewModel->addObserver(m_mainWindow.getSink());
-    m_mainWindow.addObserver(m_pViewModel->getSink());
     return true;
 }
 

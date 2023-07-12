@@ -58,9 +58,10 @@ void EventCallback::execCommand(std::string cmd)
 	cmd = toUpperString(cmd); // converts the command to uppercase for case-insensitive comparisons
 
 	// execute different commands
-	if(cmd == "TRAN")
+	if(cmd == "TRAN"){
 		m_pV->m_pRenderer->switchViewMode(); // switches the view mode
-	else if(cmd == "RESET") {
+		m_pV->m_pRenderer->setRenderState(1);
+	}else if(cmd == "RESET") {
 		m_pV->m_pResetHandler->exec();
 	}else if(cmd == "RANDOM") {
 		m_pV->m_pRandomHandler->exec();
