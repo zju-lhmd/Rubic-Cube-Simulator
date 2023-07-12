@@ -14,14 +14,5 @@ char toUpper(char);
 char toLower(char);
 std::string toUpperString(std::string);
 std::string toLowerString(std::string);
-std::string stepsToString(CubeSteps, char);
-CubeRotateMethod inverse(CubeRotateMethod);
-double GetTime();
-
-// copy steps with deleting NONE steps
-void copySteps(CubeSteps &src, CubeSteps &dest);
-
-bool isWholeRotate(CubeRotateMethod);
-
 
 #endif
