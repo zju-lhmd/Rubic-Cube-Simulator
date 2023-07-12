@@ -13,5 +13,20 @@ void SolveCommand::setParameter(const std::any& param)
 
 void SolveCommand::exec()
 {
-	return;
+	// stop any rotation right now
+	m_pVM->notifyAllObservers(0);
+	Cube cpyCube(*(m_pVM->m_pCube));
+	CubeSolver solver(cpyCube);
+	// solve cubes
+	solver.solve();
+	CubeSteps steps = solver.GetSteps();
+	// optimize steps
+	ReduceFilter rf;
+	steps = rf.Filter(steps);
+	NoXYZFilter nxyzf;
+	steps = nxyzf.Filter(steps);
+	steps = rf.Filter(steps);
+	// start play steps
+	*m_pVM->m_pRSteps = steps;
+	m_pVM->notifyAllObservers(2);
 }
